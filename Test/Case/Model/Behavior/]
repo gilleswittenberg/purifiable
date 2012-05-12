@@ -1,0 +1,81 @@
+<?php
+/**
+ * Test cases for Purifiable Behavior
+ *
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @package App.Test
+ * @subpackage App.Test.Case.Model.Behavior
+ */
+
+require_once('../../Vendor/htmlpurifier/htmlpurifier.standalone.php');
+/**
+ * Base model that to load Purifiable behavior on every test model.
+ *
+ * @package App.Test
+ * @subpackage App.Test.Case.Behaviors
+ */
+class PurifiableTestModel extends CakeTestModel {
+    /**
+     * Behaviors for this model
+     *
+     * @var array
+     * @access public
+     */
+    public $actsAs = array('Purifiable.Purifiable');
+}
+
+/**
+ * Model used in test case.
+ *
+ * @package    App.Test
+ * @subpackage App.test.Case.Behaviors
+ */
+//class SlugArticle extends SluggableTestModel {
+    /**
+     * Name for this model
+     *
+     * @var string
+     * @access public
+     */
+	//public $name = 'SlugArticle';
+//}
+
+/**
+ * Test case for Sluggable Behavior
+ *
+ * @package app.tests
+ * @subpackage app.tests.cases.models
+ */
+class PurifiableTestCase extends CakeTestCase {
+    /**
+     * Fixtures associated with this test case
+     *
+     * @var array
+     * @access public
+     */
+    //public $fixtures = array('plugin.sluggable.slug_article');
+
+    /**
+     * Method executed before each test
+     *
+     * @access public
+     */
+    public function startTest() {
+        $this->PurifiableModel =& new PurifiableTestModel();
+    }
+
+    /**
+     * Method executed after each test
+     *
+     * @access public
+     */
+    public function endTest() {
+        unset($this->PurifiableModel);
+
+        ClassRegistry::flush();
+    }
+
+	public function testClean() {
+		$this->PurifiableModel->clean($this->PurifiableModel, 'asdf');
+	}
+}

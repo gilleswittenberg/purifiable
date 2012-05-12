@@ -15,10 +15,10 @@ class PurifiableBehavior extends ModelBehavior {
  * keyed off of the model name.
  *
  * @var array
- * @access public
+ * @access protected
  * @see Model::$alias
  */
-	var $_settings = array(
+	protected $_settings = array(
 		'fields' => array(),
 		'overwrite' => false,
 		'affix' => '_clean',
@@ -41,58 +41,58 @@ class PurifiableBehavior extends ModelBehavior {
 /**
  * Initiate Purifiable Behavior
  *
- * @param object $model
+ * @param object $Model
  * @param array $config
  * @return void
  * @access public
  */
-	function setup(&$model, $config = array()) {
-		$this->settings[$model->alias] = $this->_settings;
+	public function setup(Model $Model, $config = array()) {
+		$this->settings[$Model->alias] = $this->_settings;
 
 		//merge custom config with default settings
-		$this->settings[$model->alias] = array_merge_recursive($this->settings[$model->alias], (array)$config);
+		$this->settings[$Model->alias] = array_merge_recursive($this->settings[$Model->alias], (array)$config);
 	}
 
 /**
  * Before save callback
  *
- * @param object $model Model using this behavior
+ * @param object $Model Model using this behavior
  * @return boolean True if the operation should continue, false if it should abort
  * @access public
  */
-	function beforeSave(&$model) {
-		foreach($this->settings[$model->alias]['fields'] as $fieldName) {
-			if (!isset($model->data[$model->alias][$fieldName]) or empty($model->data[$model->alias][$fieldName])) {
+	public function beforeSave(Model $Model) {
+		foreach($this->settings[$Model->alias]['fields'] as $fieldName) {
+			if (!isset($Model->data[$Model->alias][$fieldName]) or empty($Model->data[$Model->alias][$fieldName])) {
 				continue;
 			}
 
-			if ($this->settings[$model->alias]['overwrite']) {
-				$model->data[$model->alias][$fieldName] = $this->clean($model, $model->data[$model->alias][$fieldName]);
+			if ($this->settings[$Model->alias]['overwrite']) {
+				$Model->data[$Model->alias][$fieldName] = $this->clean($Model, $Model->data[$Model->alias][$fieldName]);
 			} else {
-				$affix = $this->settings[$model->alias]['affix'];
+				$affix = $this->settings[$Model->alias]['affix'];
 				$affixedFieldName = "{$fieldName}{$affix}";
-				if ($this->settings[$model->alias]['affix_position'] == 'prefix') {
+				if ($this->settings[$Model->alias]['affix_position'] == 'prefix') {
 					$affixedFieldName = "{$affix}{$fieldName}";
 				}
-				$model->data[$model->alias][$affixedFieldName] = $this->clean($model, $model->data[$model->alias][$fieldName]);
+				$Model->data[$Model->alias][$affixedFieldName] = $this->clean($Model, $Model->data[$Model->alias][$fieldName]);
 			}
 		}
 		return true;
 	}
 
-	function clean(&$model, $field) {
+	public function clean(Model $Model, $field) {
 		App::import('Vendor', 'Purifiable.htmlpurifier/htmlpurifier');
 		//the next few lines allow the config settings to be cached
 		$config = HTMLPurifier_Config::createDefault();
-		foreach ($this->settings[$model->alias]['config'] as $namespace => $values) {
+		foreach ($this->settings[$Model->alias]['config'] as $namespace => $values) {
 			foreach ($values as $key => $value) {
 				$config->set("{$namespace}.{$key}", $value);
 			}
 		}
 
-		if($this->settings[$model->alias]['customFilters']) {
+		if($this->settings[$Model->alias]['customFilters']) {
 			$filters = array();
-			foreach($this->settings[$model->alias]['customFilters'] as $customFilter) {
+			foreach($this->settings[$Model->alias]['customFilters'] as $customFilter) {
 				$filters[] = new $customFilter;
 			}
 			$config->set('Filter.Custom', $filters);

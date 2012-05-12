@@ -7,6 +7,8 @@
  * @package default
  * @author Jose Diaz-Gonzalez
  **/
+require_once(APP . 'Plugin' . DS . 'Purifiable' . DS . 'Vendor' . DS . 'htmlpurifier' . DS . 'HTMlPurifier.standalone.php');
+
 class PurifiableBehavior extends ModelBehavior {
 
 /**
@@ -81,7 +83,6 @@ class PurifiableBehavior extends ModelBehavior {
 	}
 
 	public function clean(Model $Model, $field) {
-		App::import('Vendor', 'Purifiable.htmlpurifier/htmlpurifier');
 		//the next few lines allow the config settings to be cached
 		$config = HTMLPurifier_Config::createDefault();
 		foreach ($this->settings[$Model->alias]['config'] as $namespace => $values) {

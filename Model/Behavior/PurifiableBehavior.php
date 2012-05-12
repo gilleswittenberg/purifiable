@@ -7,6 +7,7 @@
  * @package default
  * @author Jose Diaz-Gonzalez
  **/
+App::uses('Utility', 'Set');
 require_once(APP . 'Plugin' . DS . 'Purifiable' . DS . 'Vendor' . DS . 'htmlpurifier' . DS . 'HTMlPurifier.standalone.php');
 
 class PurifiableBehavior extends ModelBehavior {
@@ -52,7 +53,7 @@ class PurifiableBehavior extends ModelBehavior {
 		$this->settings[$Model->alias] = $this->_settings;
 
 		//merge custom config with default settings
-		$this->settings[$Model->alias] = array_merge_recursive($this->settings[$Model->alias], (array)$config);
+		$this->settings[$Model->alias] = Set::merge($this->settings[$Model->alias], (array)$config);
 	}
 
 /**

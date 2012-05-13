@@ -136,4 +136,3 @@ class PurifiableBehavior extends ModelBehavior {
 		$this->_purifiers[$Model->alias] = new HTMLPurifier($config);
 	}
 }
-?>

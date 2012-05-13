@@ -72,8 +72,8 @@ class PurifiableBehavior extends ModelBehavior {
 /**
  * Before save callback
  *
- * @param object $Model Model using this behavior
- * @return boolean True if the operation should continue, false if it should abort
+ * @param object $Model Model using Purifiable
+ * @return boolean True
  * @access public
  */
 	public function beforeSave(Model $Model) {

@@ -119,7 +119,7 @@ class PurifiableTestCase extends CakeTestCase {
      * @access public
      */
 	public function testClean() {
-		$cleanStr = $this->PurifiableModel->clean($this->str);
+		$cleanStr = $this->PurifiableModel->purify($this->str);
 		$this->assertEquals($this->expectedStr, $cleanStr);
 	}
 }

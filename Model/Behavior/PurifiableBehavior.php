@@ -75,28 +75,28 @@ class PurifiableBehavior extends ModelBehavior {
 			}
 
 			if ($this->settings[$Model->alias]['overwrite']) {
-				$Model->data[$Model->alias][$fieldName] = $this->clean($Model, $Model->data[$Model->alias][$fieldName]);
+				$Model->data[$Model->alias][$fieldName] = $this->purify($Model, $Model->data[$Model->alias][$fieldName]);
 			} else {
 				$affix = $this->settings[$Model->alias]['affix'];
 				$affixedFieldName = "{$fieldName}{$affix}";
 				if ($this->settings[$Model->alias]['affix_position'] == 'prefix') {
 					$affixedFieldName = "{$affix}{$fieldName}";
 				}
-				$Model->data[$Model->alias][$affixedFieldName] = $this->clean($Model, $Model->data[$Model->alias][$fieldName]);
+				$Model->data[$Model->alias][$affixedFieldName] = $this->purify($Model, $Model->data[$Model->alias][$fieldName]);
 			}
 		}
 		return true;
 	}
 
 /**
- * Clean field
+ * Purify string
  *
  * @param object $Model Model using Purifiable
  * @param string $str String to be purified
  * @return string Purified string
  * @access public
  */
-	public function clean(Model $Model, $str) {
+	public function purify(Model $Model, $str) {
 		return $this->_purifiers[$Model->alias]->purify($str);
 	}
 

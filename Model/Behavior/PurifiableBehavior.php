@@ -66,6 +66,9 @@ class PurifiableBehavior extends ModelBehavior {
  */
 	public function setup(Model $Model, $config = array()) {
 		$this->settings[$Model->alias] = Set::merge($this->_settings, $config);
+		if (is_string($this->settings[$Model->alias]['fields'])) {
+			$this->settings[$Model->alias]['fields'] = array($this->settings[$Model->alias]['fields']);
+		}
 		$this->_configure($Model->alias, $this->settings[$Model->alias]['config'], $this->settings[$Model->alias]['customFilters']);
 	}
 

@@ -94,7 +94,7 @@ class PurifiableTestCase extends CakeTestCase {
 	}
 
 	/**
-     * Test beforeSave method with overwriting
+     * Test beforeSave method with multipleFields
      *
      * @access public
      */
@@ -113,6 +113,22 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
 
+	/**
+     * Test beforeSave method with fields as string
+     *
+     * @access public
+     */
+	public function testBeforeSaveFieldsAsString() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body'));
+		$data = array(
+			'PurifiableModel' => array(
+				'body' => $this->str
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
+	}
     /**
      * Test clean method
      *

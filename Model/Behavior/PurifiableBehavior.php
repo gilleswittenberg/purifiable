@@ -49,6 +49,14 @@ class PurifiableBehavior extends ModelBehavior {
 	);
 
 /**
+ * Array holding HTMLPurifier instances
+ *
+ * @var array
+ * @access protected
+ */
+	protected $_purifiers = array();
+
+/**
  * Setup Purifiable with the specified configuration settings.
  *
  * @param Model $model Model using Purifiable

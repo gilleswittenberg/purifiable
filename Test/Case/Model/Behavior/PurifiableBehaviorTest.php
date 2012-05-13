@@ -76,6 +76,43 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body' . $suffix]);
 	}
 
+	/**
+     * Test beforeSave method with overwriting
+     *
+     * @access public
+     */
+	public function testBeforeSaveOverwrite() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'overwrite' => true));
+		$data = array(
+			'PurifiableModel' => array(
+				'body' => $this->str
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body']);
+	}
+
+	/**
+     * Test beforeSave method with overwriting
+     *
+     * @access public
+     */
+	public function testBeforeSaveMultipleFields() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('title', 'body')));
+		$title = '<h1>Header</h1>';
+		$data = array(
+			'PurifiableModel' => array(
+				'title' => $title,
+				'body' => $this->str
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertEquals($title, $result['PurifiableModel']['title_clean']);
+		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
+	}
+
     /**
      * Test clean method
      *

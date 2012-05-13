@@ -11,9 +11,16 @@ App::uses('Set', 'Utility');
 require_once(APP . 'Plugin' . DS . 'Purifiable' . DS . 'Vendor' . DS . 'htmlpurifier' . DS . 'HTMlPurifier.standalone.php');
 
 class PurifiableBehavior extends ModelBehavior {
+/**
+ * Settings array
+ *
+ * @var array
+ * @access public
+ */
+	public $settings = array();
 
 /**
- * Contains configuration settings for use with individual model objects.
+ * Contains default configuration settings for use with individual model objects.
  * Individual model settings should be stored as an associative array,
  * keyed off of the model name.
  *
@@ -42,18 +49,15 @@ class PurifiableBehavior extends ModelBehavior {
 	);
 
 /**
- * Initiate Purifiable Behavior
+ * Setup Purifiable with the specified configuration settings.
  *
- * @param object $Model
- * @param array $config
+ * @param Model $model Model using Purifiable
+ * @param array $config Configuration settings for $model
  * @return void
  * @access public
  */
 	public function setup(Model $Model, $config = array()) {
-		$this->settings[$Model->alias] = $this->_settings;
-
-		//merge custom config with default settings
-		$this->settings[$Model->alias] = Set::merge($this->settings[$Model->alias], (array)$config);
+		$this->settings[$Model->alias] = Set::merge($this->_settings, $config);
 	}
 
 /**

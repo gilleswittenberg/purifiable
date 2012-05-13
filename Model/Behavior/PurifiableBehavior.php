@@ -66,7 +66,7 @@ class PurifiableBehavior extends ModelBehavior {
  */
 	public function setup(Model $Model, $config = array()) {
 		$this->settings[$Model->alias] = Set::merge($this->_settings, $config);
-		$this->_configure($Model, $this->settings[$Model->alias]['config'], $this->settings[$Model->alias]['customFilters']);
+		$this->_configure($Model->alias, $this->settings[$Model->alias]['config'], $this->settings[$Model->alias]['customFilters']);
 	}
 
 /**
@@ -110,13 +110,13 @@ class PurifiableBehavior extends ModelBehavior {
 /**
  * Configure HTMLPurifier
  *
- * @param Model $Model Model using Purifiable
+ * @param string $alias Alias of model using Purifiable
  * @param array $settings Configuration settings
  * @param array $customFilters Custom Filters
  * @return object HTMLPurifier
  * @access protected
  */
-	protected function _configure(Model $Model, $settings, $customFilters) {
+	protected function _configure($alias, $settings, $customFilters) {
 		$config = HTMLPurifier_Config::createDefault();
 		// configuration
 		foreach ($settings as $namespace => $values) {
@@ -133,6 +133,6 @@ class PurifiableBehavior extends ModelBehavior {
 			$config->set('Filter.Custom', $filters);
 		}
 		// create HTMLPurifier instance
-		$this->_purifiers[$Model->alias] = new HTMLPurifier($config);
+		$this->_purifiers[$alias] = new HTMLPurifier($config);
 	}
 }

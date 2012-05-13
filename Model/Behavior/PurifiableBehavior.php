@@ -58,6 +58,7 @@ class PurifiableBehavior extends ModelBehavior {
  */
 	public function setup(Model $Model, $config = array()) {
 		$this->settings[$Model->alias] = Set::merge($this->_settings, $config);
+		$this->_configure($Model, $this->settings[$Model->alias]['config'], $this->settings[$Model->alias]['customFilters']);
 	}
 
 /**
@@ -87,26 +88,45 @@ class PurifiableBehavior extends ModelBehavior {
 		return true;
 	}
 
-	public function clean(Model $Model, $field) {
-		//the next few lines allow the config settings to be cached
-		$config = HTMLPurifier_Config::createDefault();
-		foreach ($this->settings[$Model->alias]['config'] as $namespace => $values) {
-			foreach ($values as $key => $value) {
-				$config->set("{$namespace}.{$key}", $value);
-			}
-		}
-
-		if($this->settings[$Model->alias]['customFilters']) {
-			$filters = array();
-			foreach($this->settings[$Model->alias]['customFilters'] as $customFilter) {
-				$filters[] = new $customFilter;
-			}
-			$config->set('Filter.Custom', $filters);
-		}
-
-		$cleaner =& new HTMLPurifier($config);
-		return $cleaner->purify($field);
+/**
+ * Clean field
+ *
+ * @param object $Model Model using Purifiable
+ * @param string $str String to be purified
+ * @return string Purified string
+ * @access public
+ */
+	public function clean(Model $Model, $str) {
+		return $this->_purifiers[$Model->alias]->purify($str);
 	}
 
+/**
+ * Configure HTMLPurifier
+ *
+ * @param Model $Model Model using Purifiable
+ * @param array $settings Configuration settings
+ * @param array $customFilters Custom Filters
+ * @return object HTMLPurifier
+ * @access protected
+ */
+	protected function _configure(Model $Model, $settings, $customFilters) {
+		$config = HTMLPurifier_Config::createDefault();
+		// configuration
+		foreach ($settings as $namespace => $values) {
+			foreach ($values as $key => $value) {
+				$config->set($namespace . '.' . $key, $value);
+			}
+		}
+		// custom filters
+		$filters = array();
+		foreach ($customFilters as $customFilter) {
+			$filters[] = new $customFilter;
+		}
+		if ($filters) {
+			$config->set('Filter.Custom', $filters);
+		}
+		// create HTMLPurifier instance
+		$this->_purifiers[$Model->alias] = new HTMLPurifier($config);
+	}
 }
 ?>

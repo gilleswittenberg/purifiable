@@ -8,7 +8,7 @@
  * @author Jose Diaz-Gonzalez
  **/
 App::uses('Set', 'Utility');
-require_once(App::pluginPath('Purifiable') . 'Vendor' . DS . 'htmlpurifier-4.4.0-standalone' . DS . 'HTMlPurifier.standalone.php');
+require_once(App::pluginPath('Purifiable') . 'Vendor' . DS . 'htmlpurifier' . DS . 'library' . DS . 'HTMlPurifier.auto.php');
 
 class PurifiableBehavior extends ModelBehavior {
 /**

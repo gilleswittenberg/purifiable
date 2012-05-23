@@ -76,6 +76,24 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body' . $suffix]);
 	}
 
+    /**
+     * Test beforeSave method with suffix appending
+     *
+     * @access public
+     */
+	public function testBeforeSaveAffix() {
+		$affix = 'clean_';
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'affix' => $affix, 'affix_position' => 'prefix'));
+		$data = array(
+			'PurifiableModel' => array(
+				'body' => $this->str
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertEquals($this->expectedStr, $result['PurifiableModel'][$affix . 'body']);
+	}
+
 	/**
      * Test beforeSave method with overwriting
      *
@@ -129,6 +147,41 @@ class PurifiableTestCase extends CakeTestCase {
 		$result = $this->PurifiableModel->save($data);
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
+
+	/**
+     * Test beforeSave method with other fields configured
+     *
+     * @access public
+     */
+	public function testBeforeSaveOtherFields() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body'));
+		$data = array(
+			'PurifiableModel' => array(
+				'title' => $this->str
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertEquals($this->str, $result['PurifiableModel']['title']);
+	}
+	/**
+     * Test beforeSave method with Filter.Custom
+     *
+     * @access public
+     */
+	public function testBeforeSaveWithYoutubeCustomFilter() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body', 'customFilters' => array('HTMLPurifier_Filter_YouTube')));
+		$youtubeObject = '<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/nto6EvPFO0Q /><param name="wmode" value="transparent" /><embed src="http://www.youtube.com/v/nto6EvPFO0Q" type="application/x-shockwave-flash" wmode="transparent" width="425" height="350" /></object>';
+		$data = array(
+			'PurifiableModel' => array(
+				'body' => $youtubeObject . '<script>alert("XSS");</script>'
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertNotEquals('</script>', substr($result['PurifiableModel']['body_clean'], -9));
+	}
+
     /**
      * Test clean method
      *

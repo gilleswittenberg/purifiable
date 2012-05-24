@@ -70,7 +70,7 @@ class PurifiableBehavior extends ModelBehavior {
  */
 	public function beforeValidate(Model $Model) {
 	if ($this->settings[$Model->alias]['callback'] == 'beforeValidate') {
-			$this->_purifyData($Model);
+			$Model->data = $this->_purifyData($Model->alias, $Model->data);
 		}
 		return true;
 	}
@@ -84,7 +84,7 @@ class PurifiableBehavior extends ModelBehavior {
  */
 	public function beforeSave(Model $Model) {
 		if ($this->settings[$Model->alias]['callback'] == 'beforeSave') {
-			$this->_purifyData($Model);
+			$Model->data = $this->_purifyData($Model->alias, $Model->data);
 		}
 		return true;
 	}
@@ -96,22 +96,23 @@ class PurifiableBehavior extends ModelBehavior {
  * @return void
  * @access protected
  */
-	protected function _purifyData(Model $Model) {
-		foreach ($this->settings[$Model->alias]['fields'] as $fieldName) {
-			if (!isset($Model->data[$Model->alias][$fieldName]) || empty($Model->data[$Model->alias][$fieldName])) {
+	protected function _purifyData($alias, $data) {
+		foreach ($this->settings[$alias]['fields'] as $fieldName) {
+			if (!isset($data[$alias][$fieldName]) || empty($data[$alias][$fieldName])) {
 				continue;
 			}
-			$purifiedField = $this->purify($Model, $Model->data[$Model->alias][$fieldName]);
-			if (!$this->settings[$Model->alias]['overwrite']) {
-				$affix = $this->settings[$Model->alias]['affix'];
-				if ($this->settings[$Model->alias]['affix_position'] === 'prefix') {
+			$purifiedField = $this->_HTMLPurifierWrappers[$alias]->purify($data[$alias][$fieldName]);
+			if (!$this->settings[$alias]['overwrite']) {
+				$affix = $this->settings[$alias]['affix'];
+				if ($this->settings[$alias]['affix_position'] === 'prefix') {
 					$fieldName = $affix . $fieldName;
 				} else {
 					$fieldName = $fieldName . $affix;
 				}
 			}
-			$Model->data[$Model->alias][$fieldName] = $purifiedField;
+			$data[$alias][$fieldName] = $purifiedField;
 		}
+		return $data;
 	}
 
 /**

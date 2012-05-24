@@ -1,7 +1,7 @@
 <?php
 //App::uses('Component', 'Controller.Component');
 App::uses('HTMLPurifierWrapper', 'HTMLPurifier.Lib');
-class HTMLPurifierComponent extends Component {
+class PurifierComponent extends Component {
 /**
  * HTMLPurifierWrapper instance reference
  *

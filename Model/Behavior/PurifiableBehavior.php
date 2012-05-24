@@ -8,7 +8,7 @@
  * @author Jose Diaz-Gonzalez
  **/
 App::uses('Set', 'Utility');
-require_once(App::pluginPath('Purifiable') . 'Vendor' . DS . 'htmlpurifier' . DS . 'library' . DS . 'HTMlPurifier.auto.php');
+App::uses('HTMLPurifierWrapper', 'Purifiable.Lib');
 
 class PurifiableBehavior extends ModelBehavior {
 /**
@@ -33,19 +33,7 @@ class PurifiableBehavior extends ModelBehavior {
 		'overwrite' => false,
 		'affix' => '_clean',
 		'affix_position' => 'suffix',
-		'config' => array(
-			'HTML' => array(
-				'DefinitionID' => 'purifiable',
-				'DefinitionRev' => 1,
-				'TidyLevel' => 'heavy',
-				'Doctype' => 'XHTML 1.0 Transitional'
-			),
-			'Core' => array(
-				'Encoding' => 'ISO-8859-1'
-			),
-		),
-		'customFilters' => array(
-		)
+		'HTMLPurifier' => array(),
 	);
 
 /**
@@ -69,7 +57,7 @@ class PurifiableBehavior extends ModelBehavior {
 		if (is_string($this->settings[$Model->alias]['fields'])) {
 			$this->settings[$Model->alias]['fields'] = array($this->settings[$Model->alias]['fields']);
 		}
-		$this->_configure($Model->alias, $this->settings[$Model->alias]['config'], $this->settings[$Model->alias]['customFilters']);
+		$this->_purifiers[$Model->alias] = new HTMLPurifierWrapper($this->settings[$Model->alias]['HTMLPurifier']);
 	}
 
 /**
@@ -108,34 +96,5 @@ class PurifiableBehavior extends ModelBehavior {
  */
 	public function purify(Model $Model, $str) {
 		return $this->_purifiers[$Model->alias]->purify($str);
-	}
-
-/**
- * Configure HTMLPurifier
- *
- * @param string $alias Alias of model using Purifiable
- * @param array $settings Configuration settings
- * @param array $customFilters Custom Filters
- * @return object HTMLPurifier
- * @access protected
- */
-	protected function _configure($alias, $settings, $customFilters) {
-		$config = HTMLPurifier_Config::createDefault();
-		// configuration
-		foreach ($settings as $namespace => $values) {
-			foreach ($values as $key => $value) {
-				$config->set($namespace . '.' . $key, $value);
-			}
-		}
-		// custom filters
-		$filters = array();
-		foreach ($customFilters as $customFilter) {
-			$filters[] = new $customFilter;
-		}
-		if ($filters) {
-			$config->set('Filter.Custom', $filters);
-		}
-		// create HTMLPurifier instance
-		$this->_purifiers[$alias] = new HTMLPurifier($config);
 	}
 }

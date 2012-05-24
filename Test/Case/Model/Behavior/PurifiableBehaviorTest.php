@@ -171,7 +171,7 @@ class PurifiableTestCase extends CakeTestCase {
      */
 	public function testBeforeSaveWithYoutubeCustomFilter() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
-		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body', 'customFilters' => array('HTMLPurifier_Filter_YouTube')));
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body', 'HTMLPurifier' => array('Filter' => array('HTMLPurifier_Filter_YouTube'))));
 		$youtubeObject = '<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/nto6EvPFO0Q /><param name="wmode" value="transparent" /><embed src="http://www.youtube.com/v/nto6EvPFO0Q" type="application/x-shockwave-flash" wmode="transparent" width="425" height="350" /></object>';
 		$data = array(
 			'PurifiableModel' => array(
@@ -179,7 +179,7 @@ class PurifiableTestCase extends CakeTestCase {
 			)
 		);
 		$result = $this->PurifiableModel->save($data);
-		$this->assertNotEquals('</script>', substr($result['PurifiableModel']['body_clean'], -9));
+		$this->assertEquals('</object>', substr($result['PurifiableModel']['body_clean'], -9));
 	}
 
     /**

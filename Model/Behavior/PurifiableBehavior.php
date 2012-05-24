@@ -29,6 +29,7 @@ class PurifiableBehavior extends ModelBehavior {
  * @see Model::$alias
  */
 	protected $_settings = array(
+		'callback' => 'beforeSave',
 		'fields' => array(),
 		'overwrite' => false,
 		'affix' => '_clean',
@@ -61,6 +62,20 @@ class PurifiableBehavior extends ModelBehavior {
 	}
 
 /**
+ * Before validate callback
+ *
+ * @param object $Model Model using Purifiable
+ * @return boolean True
+ * @access public
+ */
+	public function beforeValidate(Model $Model) {
+	if ($this->settings[$Model->alias]['callback'] == 'beforeValidate') {
+			$this->_purifyData($Model);
+		}
+		return true;
+	}
+
+/**
  * Before save callback
  *
  * @param object $Model Model using Purifiable
@@ -68,6 +83,20 @@ class PurifiableBehavior extends ModelBehavior {
  * @access public
  */
 	public function beforeSave(Model $Model) {
+		if ($this->settings[$Model->alias]['callback'] == 'beforeSave') {
+			$this->_purifyData($Model);
+		}
+		return true;
+	}
+
+/**
+ * Purify Model data
+ *
+ * @param object $Model Model using Purifiable
+ * @return void
+ * @access protected
+ */
+	protected function _purifyData(Model $Model) {
 		foreach ($this->settings[$Model->alias]['fields'] as $fieldName) {
 			if (!isset($Model->data[$Model->alias][$fieldName]) || empty($Model->data[$Model->alias][$fieldName])) {
 				continue;
@@ -83,7 +112,6 @@ class PurifiableBehavior extends ModelBehavior {
 			}
 			$Model->data[$Model->alias][$fieldName] = $purifiedField;
 		}
-		return true;
 	}
 
 /**

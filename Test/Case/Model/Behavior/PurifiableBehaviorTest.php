@@ -164,6 +164,7 @@ class PurifiableTestCase extends CakeTestCase {
 		$result = $this->PurifiableModel->save($data);
 		$this->assertEquals($this->str, $result['PurifiableModel']['title']);
 	}
+
 	/**
      * Test beforeSave method with Filter.Custom
      *
@@ -180,6 +181,23 @@ class PurifiableTestCase extends CakeTestCase {
 		);
 		$result = $this->PurifiableModel->save($data);
 		$this->assertEquals('</object>', substr($result['PurifiableModel']['body_clean'], -9));
+	}
+
+	/**
+	 * Test beforeValidate Callback
+	 *
+	 * @access public
+	 */
+	public function testBeforeValidateCallback() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'callback' => 'beforeValidate'));
+		$data = array(
+			'PurifiableModel' => array(
+				'body' => $this->str
+			)
+		);
+		$result = $this->PurifiableModel->save($data);
+		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
 
     /**

@@ -18,7 +18,7 @@ class PurifiableModel extends CakeTestModel {
      * @var array
      * @access public
      */
-    public $actsAs = array('Purifiable.Purifiable');
+    public $actsAs = array('HTMLPurifier.Purifiable');
 }
 
 /**
@@ -34,7 +34,7 @@ class PurifiableTestCase extends CakeTestCase {
      * @var array
      * @access public
      */
-    public $fixtures = array('plugin.purifiable.purifiable_model');
+    public $fixtures = array('plugin.HTMLPurifier.purifiable_model');
 
     /**
      * Method executed before each test

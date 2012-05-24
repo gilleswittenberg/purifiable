@@ -8,7 +8,7 @@
  * @author Jose Diaz-Gonzalez
  **/
 App::uses('Set', 'Utility');
-App::uses('HTMLPurifierWrapper', 'Purifiable.Lib');
+App::uses('HTMLPurifierWrapper', 'HTMLPurifier.Lib');
 
 class PurifiableBehavior extends ModelBehavior {
 /**

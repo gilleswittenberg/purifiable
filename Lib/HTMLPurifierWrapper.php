@@ -1,6 +1,6 @@
 <?php
 App::uses('Set', 'Utility');
-require_once(App::pluginPath('Purifiable') . 'Vendor' . DS . 'htmlpurifier' . DS . 'library' . DS . 'HTMlPurifier.auto.php');
+require_once(App::pluginPath('HTMLPurifier') . 'Vendor' . DS . 'htmlpurifier' . DS . 'library' . DS . 'HTMlPurifier.auto.php');
 /**
  * HTMLPurifier wrapper class
  *

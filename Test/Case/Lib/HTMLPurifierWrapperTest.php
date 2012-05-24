@@ -4,7 +4,7 @@
  *
  * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-App::uses('HTMLPurifierWrapper', 'Purifiable.Lib');
+App::uses('HTMLPurifierWrapper', 'HTMLPurifier.Lib');
 
 /**
  * Test case for Sluggable Behavior

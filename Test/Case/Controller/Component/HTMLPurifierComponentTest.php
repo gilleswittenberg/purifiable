@@ -3,7 +3,7 @@ App::uses('Controller', 'Controller');
 App::uses('CakeRequest', 'Network');
 App::uses('CakeResponse', 'Network');
 App::uses('ComponentCollection', 'Controller');
-App::uses('HTMLPurifierComponent', 'Purifiable.Controller/Component');
+App::uses('HTMLPurifierComponent', 'HTMLPurifier.Controller/Component');
 
 class TestHTMLPurifierController extends Controller {}
 

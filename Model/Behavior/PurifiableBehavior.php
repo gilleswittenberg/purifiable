@@ -90,6 +90,22 @@ class PurifiableBehavior extends ModelBehavior {
 	}
 
 /**
+ * After find callback
+ *
+ * @param object $Model Model using Purifiable
+ * @return boolean True
+ * @access public
+ */
+	public function afterFind(Model $Model, $data) {
+		if ($this->settings[$Model->alias]['callback'] == 'afterFind') {
+			foreach ($data as $key => $value) {
+				$data[$key] = $this->_purifyData($Model->alias, $value);
+			}
+		}
+		return $data;
+	}
+
+/**
  * Purify Model data
  *
  * @param object $Model Model using Purifiable

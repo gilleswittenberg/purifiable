@@ -15,4 +15,17 @@ class PurifiableModelFixture extends CakeTestFixture {
           'title' => array('type' => 'string', 'length' => 255, 'null' => false),
           'body' => 'text',
 	);
+
+/**
+ * Records
+ *
+ * @var array
+ */
+	public $records = array(
+		array(
+			'id' => 1,
+			'title' => 'Dirty record',
+			'body' => '<p>test</p><script>alert("XSS");</script>'
+		)
+	);
 }

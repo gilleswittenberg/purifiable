@@ -200,6 +200,18 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
 
+	/**
+	 * Test afterFind Callback
+	 *
+	 * @access public
+	 */
+	public function testAfterFindCallback() {
+		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
+		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'callback' => 'afterFind'));
+		$result = $this->PurifiableModel->find('first', array('conditions' => array('id' => 1)));
+		$this->assertEquals('<p>test</p>', $result['PurifiableModel']['body_clean']);
+	}
+
     /**
      * Test clean method
      *

@@ -43,7 +43,7 @@ class PurifiableBehavior extends ModelBehavior {
  * @var array
  * @access protected
  */
-	protected $_purifiers = array();
+	protected $_HTMLPurifierWrappers = array();
 
 /**
  * Setup Purifiable with the specified configuration settings.
@@ -58,7 +58,7 @@ class PurifiableBehavior extends ModelBehavior {
 		if (is_string($this->settings[$Model->alias]['fields'])) {
 			$this->settings[$Model->alias]['fields'] = array($this->settings[$Model->alias]['fields']);
 		}
-		$this->_purifiers[$Model->alias] = new HTMLPurifierWrapper($this->settings[$Model->alias]['HTMLPurifier']);
+		$this->_HTMLPurifierWrappers[$Model->alias] = new HTMLPurifierWrapper($this->settings[$Model->alias]['HTMLPurifier']);
 	}
 
 /**
@@ -123,6 +123,6 @@ class PurifiableBehavior extends ModelBehavior {
  * @access public
  */
 	public function purify(Model $Model, $str) {
-		return $this->_purifiers[$Model->alias]->purify($str);
+		return $this->_HTMLPurifierWrappers[$Model->alias]->purify($str);
 	}
 }

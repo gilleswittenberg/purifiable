@@ -1,57 +1,74 @@
 <?php
-App::uses('Set', 'Utility');
-require_once(App::pluginPath('HTMLPurifier') . 'Vendor' . DS . 'htmlpurifier' . DS . 'library' . DS . 'HTMlPurifier.auto.php');
 /**
- * HTMLPurifier wrapper class
+ * HTMLPurifierWrapper
+ *
+ * PHP 5
+ *
+ * Copyright 2012, Gilles Wittenberg (http://www.gilleswittenberg.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright	Copyright (c) 2012, Gilles Wittenberg
+ * @license		MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+App::uses('Set', 'Utility');
+require_once App::pluginPath('HTMLPurifier') . 'Vendor' . DS . 'htmlpurifier' . DS . 'library' . DS . 'HTMlPurifier.auto.php';
+
+/**
+ * HTMLPurifierWrapper class
  *
  * Creates and wraps HTMLPurifier instance with specified configuration
  *
- * @package HTMLPurifier
- * @author Gilles Wittenberg
+ * @package		HTMLPurifier
+ * @author		Gilles Wittenberg
  */
 class HTMLPurifierWrapper {
 
 /**
  * Default configurations
  *
- * @var array
- * @access protected
+ * @var 	array
+ * @access 	protected
  */
 	protected $_defaultConfig = array();
 
 /**
  * Configurations
  *
- * @var array
- * @access protected
+ * @var 	array
+ * @access 	protected
  */
 	protected $_config = array();
 
 /**
  * HTMLPurifier instance reference
  *
- * @var HTMLPurifier
- * @access protected
+ * @var 	HTMLPurifier
+ * @access	protected
  */
 	protected $_HTMLPurifier = null;
 
 /**
  * Constructor
  *
- * @param array $config
- * @return void
- * @access public
+ * @param 	array $config
+ * @return 	void
+ * @access	public
  */
 	public function __construct($config = null) {
 		$this->configure($config);
 	}
 
 /**
- * Create HTMLPurifier instance
+ * Configure
  *
- * @param array $config Configuration
- * @return void
- * @access public
+ * Configure and instantiate HTMLPurifier instance
+ *
+ * @param 	array $config Configuration
+ * @return 	void
+ * @access 	public
  */
 	public function configure($config = null) {
 		// merge configuration
@@ -84,11 +101,13 @@ class HTMLPurifierWrapper {
 	}
 
 /**
+ * PurifyArray
+ *
  * Recursively purify values of array
  *
- * @param array $arr Array to be purified
- * @return array Purified array
- * @access public
+ * @param	array $arr Array to be purified
+ * @return	array Purified array
+ * @access	public
  */
 	public function purifyArray($arr) {
 		foreach ($arr as $key => $value) {
@@ -102,11 +121,13 @@ class HTMLPurifierWrapper {
 	}
 
 /**
+ * Purify
+ *
  * Purify string
  *
- * @param string $str String to be purified
- * @return string Purified string
- * @access public
+ * @param	string $str String to be purified
+ * @return	string Purified string
+ * @access 	public
  */
 	public function purify($str) {
 		return $this->_HTMLPurifier->purify($str);

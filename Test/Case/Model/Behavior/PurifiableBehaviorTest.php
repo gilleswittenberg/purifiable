@@ -1,68 +1,81 @@
 <?php
 /**
- * Test cases for Purifiable Behavior
+ * PurifierModel TestCase
  *
- * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP 5
+ *
+ * Copyright 2012, Gilles Wittenberg (http://www.gilleswittenberg.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2012, Gilles Wittenberg
+ * @license	MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
  * Base model to load Purifiable behavior on test model.
  *
- * @package App.Plugin.Purifiable
- * @subpackage App.Plugin.Purifiable.Test.Case.Model.Behavior
+ * @package	HTMLPurifier.Test
+ * @author	Gilles Wittenberg
  */
 class PurifiableModel extends CakeTestModel {
-    /**
-     * Behaviors for this model
-     *
-     * @var array
-     * @access public
-     */
-    public $actsAs = array('HTMLPurifier.Purifiable');
+
+/**
+ * Behaviors for this model
+ *
+ * @var array
+ * @access public
+ */
+	public $actsAs = array('HTMLPurifier.Purifiable');
 }
 
 /**
- * Test case for Sluggable Behavior
+ * TestCase for Purifiable Behavior
  *
- * @package App.Plugin.Purifiable
- * @subpackage App.Plugin.Purifiable.Test.Case.Model.Behavior
+ * @package HtMLPurifier.Test
+ * @author	Gilles Wittenberg
  */
-class PurifiableTestCase extends CakeTestCase {
-    /**
-     * Fixtures associated with this test case
-     *
-     * @var array
-     * @access public
-     */
-    public $fixtures = array('plugin.HTMLPurifier.purifiable_model');
+class PurifiableTest extends CakeTestCase {
 
-    /**
-     * Method executed before each test
-     *
-     * @access public
-     */
-    public function startTest() {
+/**
+ * Fixtures associated with this testcase
+ *
+ * @var 	array
+ * @access 	public
+ */
+	public $fixtures = array('plugin.HTMLPurifier.purifiable_model');
+
+/**
+ * Method executed before each test
+ *
+ * @return 	void
+ * @access 	public
+ */
+	public function startTest() {
 		parent::setUp();
 		$this->PurifiableModel = ClassRegistry::init('PurifiableModel');
 		$this->str = '<p>test</p><script>alert("xss");</script>';
 		$this->expectedStr = '<p>test</p>';
-    }
+	}
 
-    /**
-     * Method executed after each test
-     *
-     * @access public
-     */
-    public function endTest() {
+/**
+ * Method executed after each test
+ *
+ * @return 	void
+ * @access 	public
+ */
+	public function endTest() {
 		unset($this->PurifiableModel);
 		parent::tearDown();
-    }
+	}
 
-    /**
-     * Test beforeSave method with suffix appending
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with suffix appending
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveSuffix() {
 		$suffix = '_cleaned';
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
@@ -76,11 +89,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body' . $suffix]);
 	}
 
-    /**
-     * Test beforeSave method with suffix appending
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with suffix appending
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveAffix() {
 		$affix = 'clean_';
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
@@ -94,11 +108,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel'][$affix . 'body']);
 	}
 
-	/**
-     * Test beforeSave method with overwriting
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with overwriting
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveOverwrite() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'overwrite' => true));
@@ -111,11 +126,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body']);
 	}
 
-	/**
-     * Test beforeSave method with multipleFields
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with multipleFields
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveMultipleFields() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('title', 'body')));
@@ -131,11 +147,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
 
-	/**
-     * Test beforeSave method with fields as string
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with fields as string
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveFieldsAsString() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body'));
@@ -148,11 +165,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
 
-	/**
-     * Test beforeSave method with other fields configured
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with other fields configured
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveOtherFields() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body'));
@@ -165,11 +183,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->str, $result['PurifiableModel']['title']);
 	}
 
-	/**
-     * Test beforeSave method with Filter.Custom
-     *
-     * @access public
-     */
+/**
+ * Test beforeSave method with Filter.Custom
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeSaveWithYoutubeCustomFilter() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => 'body', 'HTMLPurifier' => array('Filter' => array('HTMLPurifier_Filter_YouTube'))));
@@ -183,11 +202,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals('</object>', substr($result['PurifiableModel']['body_clean'], -9));
 	}
 
-	/**
-	 * Test beforeValidate Callback
-	 *
-	 * @access public
-	 */
+/**
+ * Test beforeValidate Callback
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testBeforeValidateCallback() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'callback' => 'beforeValidate'));
@@ -200,11 +220,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals($this->expectedStr, $result['PurifiableModel']['body_clean']);
 	}
 
-	/**
-	 * Test afterFind Callback
-	 *
-	 * @access public
-	 */
+/**
+ * Test afterFind Callback
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testAfterFindCallback() {
 		$this->PurifiableModel->Behaviors->unload('Purifiable.Purifiable');
 		$this->PurifiableModel->Behaviors->load('Purifiable.Purifiable', array('fields' => array('body'), 'callback' => 'afterFind'));
@@ -212,11 +233,12 @@ class PurifiableTestCase extends CakeTestCase {
 		$this->assertEquals('<p>test</p>', $result['PurifiableModel']['body_clean']);
 	}
 
-    /**
-     * Test clean method
-     *
-     * @access public
-     */
+/**
+ * Test clean method
+ *
+ * @return 	void
+ * @access 	public
+ */
 	public function testClean() {
 		$cleanStr = $this->PurifiableModel->purify($this->str);
 		$this->assertEquals($this->expectedStr, $cleanStr);

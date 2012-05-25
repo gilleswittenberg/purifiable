@@ -1,32 +1,44 @@
 <?php
 /**
- * Purifiable Model Behavior
+ * Purifiable Behavior
  *
- * Scrubs fields clean of sass
+ * PHP 5
  *
- * @package default
- * @author Jose Diaz-Gonzalez
- **/
+ * Copyright 2012, Gilles Wittenberg (http://www.gilleswittenberg.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) 2012, Gilles Wittenberg
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
 App::uses('Set', 'Utility');
 App::uses('HTMLPurifierWrapper', 'HTMLPurifier.Lib');
 
+/**
+ * Purifiable Behavior
+ *
+ * Purifies data from model
+ *
+ * @package		HTMLPurifier
+ * @author 		Gilles Wittenberg
+ */
 class PurifiableBehavior extends ModelBehavior {
+
 /**
  * Settings array
  *
- * @var array
- * @access public
+ * @var 	array
+ * @access 	public
  */
 	public $settings = array();
 
 /**
- * Contains default configuration settings for use with individual model objects.
- * Individual model settings should be stored as an associative array,
- * keyed off of the model name.
+ * Default configuration settings
  *
- * @var array
- * @access protected
- * @see Model::$alias
+ * @var 	array
+ * @access 	protected
  */
 	protected $_settings = array(
 		'callback' => 'beforeSave',
@@ -40,18 +52,20 @@ class PurifiableBehavior extends ModelBehavior {
 /**
  * Array holding HTMLPurifier instances
  *
- * @var array
- * @access protected
+ * @var 	array
+ * @access 	protected
  */
 	protected $_HTMLPurifierWrappers = array();
 
 /**
+ * Setup
+ *
  * Setup Purifiable with the specified configuration settings.
  *
- * @param Model $model Model using Purifiable
- * @param array $config Configuration settings for $model
- * @return void
- * @access public
+ * @param 	Model $model Model using Purifiable
+ * @param 	array $config Configuration settings for $model
+ * @return 	void
+ * @access 	public
  */
 	public function setup(Model $Model, $config = array()) {
 		$this->settings[$Model->alias] = Set::merge($this->_settings, $config);
@@ -62,25 +76,25 @@ class PurifiableBehavior extends ModelBehavior {
 	}
 
 /**
- * Before validate callback
+ * BeforeValidate callback
  *
- * @param object $Model Model using Purifiable
- * @return boolean True
- * @access public
+ * @param 	Model $Model Model using Purifiable
+ * @return 	boolean True
+ * @access 	public
  */
 	public function beforeValidate(Model $Model) {
-	if ($this->settings[$Model->alias]['callback'] == 'beforeValidate') {
+		if ($this->settings[$Model->alias]['callback'] == 'beforeValidate') {
 			$Model->data = $this->_purifyData($Model->alias, $Model->data);
 		}
 		return true;
 	}
 
 /**
- * Before save callback
+ * BeforeSave callback
  *
- * @param object $Model Model using Purifiable
- * @return boolean True
- * @access public
+ * @param 	Model $Model Model using Purifiable
+ * @return 	boolean true
+ * @access 	public
  */
 	public function beforeSave(Model $Model) {
 		if ($this->settings[$Model->alias]['callback'] == 'beforeSave') {
@@ -90,11 +104,12 @@ class PurifiableBehavior extends ModelBehavior {
 	}
 
 /**
- * After find callback
+ * AfterFind callback
  *
- * @param object $Model Model using Purifiable
- * @return boolean True
- * @access public
+ * @param 	Model $Model Model using Purifiable
+ * @param 	array $data Model data
+ * @return 	boolean true
+ * @access 	public
  */
 	public function afterFind(Model $Model, $data) {
 		if ($this->settings[$Model->alias]['callback'] == 'afterFind') {
@@ -108,9 +123,10 @@ class PurifiableBehavior extends ModelBehavior {
 /**
  * Purify Model data
  *
- * @param object $Model Model using Purifiable
- * @return void
- * @access protected
+ * @param 	string $alias
+ * @param 	array $data
+ * @return 	void
+ * @access 	protected
  */
 	protected function _purifyData($alias, $data) {
 		foreach ($this->settings[$alias]['fields'] as $fieldName) {
@@ -134,10 +150,10 @@ class PurifiableBehavior extends ModelBehavior {
 /**
  * Purify string
  *
- * @param object $Model Model using Purifiable
- * @param string $str String to be purified
- * @return string Purified string
- * @access public
+ * @param 	Model $Model Model using Purifiable
+ * @param 	string $str String to be purified
+ * @return 	string Purified string
+ * @access 	public
  */
 	public function purify(Model $Model, $str) {
 		return $this->_HTMLPurifierWrappers[$Model->alias]->purify($str);
